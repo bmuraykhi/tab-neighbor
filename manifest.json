@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Tab Neighbor",
   "version": "1.0.0",
-  "description": "Opens every new tab immediately to the right of the active tab instead of at the end of the tab strip.",
+  "description": "Opens new tabs next to the active tab.",
   "permissions": [
     "tabGroups",
     "storage"
