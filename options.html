@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tab Neighbor options</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <h1>Tab Neighbor</h1>
+
+    <label class="row">
+      <input type="checkbox" id="enabled" />
+      <span>
+        <strong>Enabled</strong>
+        <em>Place new tabs to the right of the active tab.</em>
+      </span>
+    </label>
+
+    <label class="row">
+      <input type="checkbox" id="moveLinkTabs" />
+      <span>
+        <strong>Reposition tabs opened from links</strong>
+        <em>Off means only tabs you open yourself (⌘T, +, bookmarks) are moved.</em>
+      </span>
+    </label>
+
+    <label class="row">
+      <input type="checkbox" id="afterChildren" />
+      <span>
+        <strong>Keep related tabs together</strong>
+        <em>Open after the tabs already spawned from the current tab, not before them.</em>
+      </span>
+    </label>
+
+    <label class="row">
+      <input type="checkbox" id="inheritGroup" />
+      <span>
+        <strong>Join the current tab's group</strong>
+        <em>New tabs inherit the tab group of the tab they came from.</em>
+      </span>
+    </label>
+
+    <p class="status" id="status" role="status"></p>
+
+    <script src="options.js"></script>
+  </body>
+</html>
