@@ -14,6 +14,7 @@ const activeHistory = new Map();
 const openerOf = new Map();
 const suppressUntil = new Map();
 let globalSuppressUntil = 0;
+let queue = Promise.resolve();
 
 const ready = init();
 
@@ -124,7 +125,7 @@ chrome.tabs.onDetached.addListener(async (tabId, { oldWindowId }) => {
 
 chrome.tabs.onCreated.addListener((tab) => {
   const referenceId = tab.openerTabId ?? activeHistory.get(tab.windowId)?.cur;
-  void place(tab, referenceId);
+  queue = queue.then(() => place(tab, referenceId)).catch(() => {});
 });
 
 async function place(tab, referenceId) {
@@ -153,6 +154,7 @@ async function place(tab, referenceId) {
   all.sort((a, b) => a.index - b.index);
   const current = all.find((t) => t.id === tab.id);
   if (!current || current.pinned) return;
+  if (tab.openerTabId === undefined && current.index !== all.length - 1) return;
 
   const reference = all.find((t) => t.id === referenceId);
   if (!reference) return;
