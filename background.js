@@ -7,11 +7,10 @@ const DEFAULTS = {
 
 const WINDOW_SUPPRESS_MS = 1500;
 const STARTUP_SUPPRESS_MS = 4000;
-const MAX_CHAIN_DEPTH = 32;
 
 let settings = { ...DEFAULTS };
 const activeHistory = new Map();
-const openerOf = new Map();
+const chains = new Map();
 const suppressUntil = new Map();
 let globalSuppressUntil = 0;
 let queue = Promise.resolve();
@@ -25,15 +24,12 @@ async function init() {
   } catch {
     settings = { ...DEFAULTS };
   }
-  let stored = { active: {}, openers: {} };
+  let stored = { active: {} };
   try {
-    stored = await chrome.storage.session.get({ active: {}, openers: {} });
+    stored = await chrome.storage.session.get({ active: {} });
   } catch {}
   for (const [windowId, entry] of Object.entries(stored.active)) {
     activeHistory.set(Number(windowId), { cur: entry.cur, prev: entry.prev });
-  }
-  for (const [tabId, parent] of Object.entries(stored.openers)) {
-    openerOf.set(Number(tabId), parent);
   }
 }
 
@@ -41,12 +37,6 @@ function persistActive() {
   const active = {};
   for (const [windowId, entry] of activeHistory) active[windowId] = entry;
   chrome.storage.session.set({ active }).catch(() => {});
-}
-
-function persistOpeners() {
-  const openers = {};
-  for (const [tabId, parent] of openerOf) openers[tabId] = parent;
-  chrome.storage.session.set({ openers }).catch(() => {});
 }
 
 chrome.storage.onChanged.addListener((changes, area) => {
@@ -71,11 +61,13 @@ chrome.windows.onCreated.addListener((win) => {
 chrome.windows.onRemoved.addListener(async (windowId) => {
   await ready;
   suppressUntil.delete(windowId);
+  chains.delete(windowId);
   if (activeHistory.delete(windowId)) persistActive();
 });
 
 chrome.tabs.onActivated.addListener(async ({ tabId, windowId }) => {
   await ready;
+  chains.delete(windowId);
   const entry = activeHistory.get(windowId);
   if (!entry) {
     activeHistory.set(windowId, { cur: tabId, prev: undefined });
@@ -88,14 +80,6 @@ chrome.tabs.onActivated.addListener(async ({ tabId, windowId }) => {
 
 chrome.tabs.onRemoved.addListener(async (tabId, { windowId }) => {
   await ready;
-  let dirty = openerOf.delete(tabId);
-  for (const [child, parent] of openerOf) {
-    if (parent === tabId) {
-      openerOf.delete(child);
-      dirty = true;
-    }
-  }
-  if (dirty) persistOpeners();
   const entry = activeHistory.get(windowId);
   if (!entry) return;
   if (entry.cur === tabId) {
@@ -110,7 +94,6 @@ chrome.tabs.onRemoved.addListener(async (tabId, { windowId }) => {
 
 chrome.tabs.onDetached.addListener(async (tabId, { oldWindowId }) => {
   await ready;
-  if (openerOf.delete(tabId)) persistOpeners();
   const entry = activeHistory.get(oldWindowId);
   if (!entry) return;
   if (entry.cur === tabId) {
@@ -159,12 +142,15 @@ async function place(tab, referenceId) {
   const reference = all.find((t) => t.id === referenceId);
   if (!reference) return;
 
-  openerOf.set(tab.id, reference.id);
-  persistOpeners();
-
-  let target = settings.afterChildren
-    ? indexAfterChain(all, reference, tab.id)
-    : reference.index + 1;
+  let target = reference.index + 1;
+  if (settings.afterChildren) {
+    const chain = chains.get(tab.windowId);
+    if (chain && chain.refId === reference.id) {
+      const last = all.find((t) => t.id === chain.lastTabId);
+      if (last && last.index > reference.index) target = last.index + 1;
+    }
+  }
+  chains.set(tab.windowId, { refId: reference.id, lastTabId: tab.id });
 
   if (current.index !== target) {
     if (current.index < target) target -= 1;
@@ -181,25 +167,4 @@ async function place(tab, referenceId) {
   try {
     await chrome.tabs.group({ groupId: reference.groupId, tabIds: [tab.id] });
   } catch {}
-}
-
-function indexAfterChain(all, reference, newTabId) {
-  let target = reference.index + 1;
-  for (const tab of all) {
-    if (tab.index <= reference.index) continue;
-    if (tab.id === newTabId) continue;
-    if (!descendsFrom(tab, reference.id)) break;
-    target = tab.index + 1;
-  }
-  return target;
-}
-
-function descendsFrom(tab, ancestorId) {
-  let parent = tab.openerTabId ?? openerOf.get(tab.id);
-  for (let depth = 0; depth < MAX_CHAIN_DEPTH; depth += 1) {
-    if (parent === undefined) return false;
-    if (parent === ancestorId) return true;
-    parent = openerOf.get(parent);
-  }
-  return false;
 }
