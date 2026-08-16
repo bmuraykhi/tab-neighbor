@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">
+  <style>
+    .badge { opacity: 0; animation: badge 6s ease infinite; }
+    @keyframes badge { 0%, 18% { opacity: 0; } 24%, 62% { opacity: 1; } 70%, 100% { opacity: 0; } }
+    .shift { animation: shift 6s ease infinite; }
+    @keyframes shift { 0%, 30% { transform: translateY(0); } 40%, 84% { transform: translateY(42px); } 94%, 100% { transform: translateY(0); } }
+    .newtab { opacity: 0; animation: pop 6s ease infinite; }
+    @keyframes pop { 0%, 34% { opacity: 0; } 44%, 82% { opacity: 1; } 92%, 100% { opacity: 0; } }
+    text { fill: #c9d1d9; font-size: 13px; }
+    .muted { fill: #8b949e; font-size: 12px; letter-spacing: .04em; }
+    .tab { fill: #21262d; }
+    .lbl { pointer-events: none; }
+  </style>
+  <rect width="760" height="420" rx="12" fill="#161b22"/>
+  <g class="badge">
+    <rect x="338" y="26" width="84" height="32" rx="7" fill="#30363d" stroke="#8b949e"/>
+    <text x="380" y="47" text-anchor="middle" font-size="15" font-weight="600">⌘ T</text>
+  </g>
+  <text class="muted" x="30" y="82">CHROME DEFAULT</text>
+  <text class="muted" x="410" y="82">WITH TAB NEIGHBOR</text>
+  <rect x="30" y="90" width="320" height="300" rx="10" fill="#0d1117"/>
+  <rect x="410" y="90" width="320" height="300" rx="10" fill="#0d1117"/>
+  <g transform="translate(46,106)">
+    <rect class="tab" width="288" height="34" rx="7"/>
+    <circle cx="17" cy="17" r="6" fill="#f78166"/>
+    <text class="lbl" x="34" y="22">Docs</text>
+    <g transform="translate(0,42)">
+      <rect class="tab" width="288" height="34" rx="7" stroke="#2f6feb" stroke-width="1.5"/>
+      <circle cx="17" cy="17" r="6" fill="#7ee787"/>
+      <text class="lbl" x="34" y="22">GitHub</text>
+      <text class="lbl muted" x="278" y="22" text-anchor="end">active</text>
+    </g>
+    <g transform="translate(0,84)">
+      <rect class="tab" width="288" height="34" rx="7"/>
+      <circle cx="17" cy="17" r="6" fill="#79c0ff"/>
+      <text class="lbl" x="34" y="22">Mail</text>
+    </g>
+    <g transform="translate(0,126)">
+      <rect class="tab" width="288" height="34" rx="7"/>
+      <circle cx="17" cy="17" r="6" fill="#d2a8ff"/>
+      <text class="lbl" x="34" y="22">News</text>
+    </g>
+    <g transform="translate(0,168)">
+      <rect class="tab" width="288" height="34" rx="7"/>
+      <circle cx="17" cy="17" r="6" fill="#ffa657"/>
+      <text class="lbl" x="34" y="22">Music</text>
+    </g>
+    <g class="newtab" transform="translate(0,210)">
+      <rect width="288" height="34" rx="7" fill="#172a45" stroke="#2f6feb"/>
+      <circle cx="17" cy="17" r="6" fill="#8ab4f8"/>
+      <text class="lbl" x="34" y="22" fill="#8ab4f8">New Tab</text>
+    </g>
+  </g>
+  <g transform="translate(426,106)">
+    <rect class="tab" width="288" height="34" rx="7"/>
+    <circle cx="17" cy="17" r="6" fill="#f78166"/>
+    <text class="lbl" x="34" y="22">Docs</text>
+    <g transform="translate(0,42)">
+      <rect class="tab" width="288" height="34" rx="7" stroke="#2f6feb" stroke-width="1.5"/>
+      <circle cx="17" cy="17" r="6" fill="#7ee787"/>
+      <text class="lbl" x="34" y="22">GitHub</text>
+      <text class="lbl muted" x="278" y="22" text-anchor="end">active</text>
+    </g>
+    <g class="shift">
+      <g transform="translate(0,84)">
+        <rect class="tab" width="288" height="34" rx="7"/>
+        <circle cx="17" cy="17" r="6" fill="#79c0ff"/>
+        <text class="lbl" x="34" y="22">Mail</text>
+      </g>
+      <g transform="translate(0,126)">
+        <rect class="tab" width="288" height="34" rx="7"/>
+        <circle cx="17" cy="17" r="6" fill="#d2a8ff"/>
+        <text class="lbl" x="34" y="22">News</text>
+      </g>
+      <g transform="translate(0,168)">
+        <rect class="tab" width="288" height="34" rx="7"/>
+        <circle cx="17" cy="17" r="6" fill="#ffa657"/>
+        <text class="lbl" x="34" y="22">Music</text>
+      </g>
+    </g>
+    <g class="newtab" transform="translate(0,84)">
+      <rect width="288" height="34" rx="7" fill="#172a45" stroke="#2f6feb"/>
+      <circle cx="17" cy="17" r="6" fill="#8ab4f8"/>
+      <text class="lbl" x="34" y="22" fill="#8ab4f8">New Tab</text>
+    </g>
+  </g>
+</svg>

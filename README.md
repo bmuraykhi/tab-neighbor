@@ -2,7 +2,12 @@
 
 Minimal Chrome extension (MV3) that opens new tabs next to the active tab
 instead of at the end of the strip. Works for `⌘T`, the `+` button,
-bookmarks, and links.
+bookmarks, and links — and below it with vertical tabs.
+
+![New tab placement: Chrome default vs Tab Neighbor](demo.svg)
+
+No build step, no dependencies, no tracking, minimal permissions —
+it never reads page content or URLs.
 
 ## Install
 
