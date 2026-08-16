@@ -3,6 +3,7 @@
   "name": "Tab Neighbor",
   "version": "1.0.0",
   "description": "Opens new tabs next to the active tab.",
+  "homepage_url": "https://github.com/bmuraykhi/tab-neighbor",
   "permissions": [
     "tabGroups",
     "storage"
