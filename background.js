@@ -7,6 +7,7 @@ const DEFAULTS = {
 
 const WINDOW_SUPPRESS_MS = 1500;
 const STARTUP_SUPPRESS_MS = 4000;
+const GROUP_SUPPRESS_MS = 700;
 
 let settings = { ...DEFAULTS };
 const activeHistory = new Map();
@@ -56,6 +57,10 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.windows.onCreated.addListener((win) => {
   suppressUntil.set(win.id, Date.now() + WINDOW_SUPPRESS_MS);
+});
+
+chrome.tabGroups.onCreated.addListener((group) => {
+  suppressUntil.set(group.windowId, Date.now() + GROUP_SUPPRESS_MS);
 });
 
 chrome.windows.onRemoved.addListener(async (windowId) => {
@@ -141,6 +146,9 @@ async function place(tab, referenceId) {
 
   const reference = all.find((t) => t.id === referenceId);
   if (!reference) return;
+
+  const groupId = current.groupId ?? tab.groupId ?? -1;
+  if (groupId !== -1 && groupId !== reference.groupId) return;
 
   let target = reference.index + 1;
   if (settings.afterChildren) {
